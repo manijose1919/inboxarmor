@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Test / coverage
+coverage/
+*.log
+
+# Local data & secrets
+.env
+.env.*
+*.local
+.inboxarmor/
+data/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

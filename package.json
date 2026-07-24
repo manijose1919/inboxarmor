@@ -1,0 +1,46 @@
+{
+  "name": "inboxarmor",
+  "version": "0.1.0",
+  "description": "Email authentication & deliverability auditor (SPF/DKIM/DMARC) — free, open-source core",
+  "type": "module",
+  "bin": {
+    "inboxarmor": "./dist/cli/index.js"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md",
+    "SETUP.md",
+    "HOW-TO.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx src/cli/index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "spf",
+    "dkim",
+    "dmarc",
+    "email",
+    "deliverability",
+    "authentication",
+    "dns",
+    "security"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "commander": "^15.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.0",
+    "tsx": "^4.23.0",
+    "typescript": "^7.0.0",
+    "vitest": "^4.1.0"
+  }
+}
