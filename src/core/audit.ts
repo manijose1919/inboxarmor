@@ -7,6 +7,7 @@
  */
 
 import type { DnsResolver } from "./dns/resolver.js";
+import { assertDkimSelector, normalizeDomain } from "./domain.js";
 import type {
   AuditOptions,
   AuditResult,
@@ -30,10 +31,13 @@ export class AuditEngine {
   constructor(private readonly dns: DnsResolver) {}
 
   async audit(domain: string, options: AuditOptions = {}): Promise<AuditResult> {
-    const host = domain.trim().toLowerCase().replace(/\.$/, "");
+    const host = normalizeDomain(domain);
     const selectors = options.selectors?.length
       ? options.selectors
       : [...COMMON_SELECTORS];
+    for (const selector of selectors) {
+      assertDkimSelector(selector);
+    }
 
     // Fan out every independent DNS lookup concurrently.
     const [apexTxt, dmarcTxt, mtaStsTxt, bimiTxt, dkimKeys] = await Promise.all([

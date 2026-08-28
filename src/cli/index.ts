@@ -11,7 +11,7 @@ import { Command } from "commander";
 import { NodeDnsResolver } from "../core/dns/resolver.js";
 import { AuditEngine } from "../core/audit.js";
 import { renderJson, renderText } from "../core/report/reporter.js";
-import { DnsLookupError } from "../core/types.js";
+import { DnsLookupError, InvalidDomainError } from "../core/types.js";
 
 const program = new Command();
 
@@ -50,7 +50,10 @@ program
   });
 
 program.parseAsync(process.argv).catch((err: unknown) => {
-  if (err instanceof DnsLookupError) {
+  if (err instanceof InvalidDomainError) {
+    process.stderr.write(`\n✖ ${err.message}\n`);
+    process.exitCode = 2;
+  } else if (err instanceof DnsLookupError) {
     process.stderr.write(`\n✖ ${err.message}\n`);
     process.exitCode = 4;
   } else {

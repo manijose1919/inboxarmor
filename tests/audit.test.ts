@@ -83,6 +83,24 @@ describe("AuditEngine (offline, StaticDnsResolver)", () => {
     expect(r.grade).toBe("A");
   });
 
+  it("rejects empty, IP, and non-hostname inputs before touching DNS", async () => {
+    const engine = new AuditEngine(new StaticDnsResolver());
+    await expect(engine.audit("")).rejects.toMatchObject({ name: "InvalidDomainError" });
+    await expect(engine.audit("127.0.0.1")).rejects.toMatchObject({ name: "InvalidDomainError" });
+    await expect(engine.audit("localhost")).rejects.toMatchObject({ name: "InvalidDomainError" });
+    await expect(engine.audit("not a domain")).rejects.toMatchObject({ name: "InvalidDomainError" });
+    await expect(engine.audit("https://example.com")).rejects.toMatchObject({
+      name: "InvalidDomainError",
+    });
+  });
+
+  it("rejects a selector that would not be a legal DNS label", async () => {
+    const engine = new AuditEngine(new StaticDnsResolver());
+    await expect(
+      engine.audit("sel.test", { selectors: ["../x"] }),
+    ).rejects.toMatchObject({ name: "InvalidDomainError" });
+  });
+
   it("honors custom DKIM selectors", async () => {
     const dns = new StaticDnsResolver({
       "custom._domainkey.sel.test": [`v=DKIM1; k=rsa; p=${goodDkim}`],
