@@ -83,6 +83,14 @@ export interface AuditOptions {
   selectors?: string[];
 }
 
+/** Error thrown when the caller passes a name that is not a DNS domain. */
+export class InvalidDomainError extends Error {
+  constructor(public readonly domain: string, reason: string) {
+    super(`Invalid domain "${domain}": ${reason}`);
+    this.name = "InvalidDomainError";
+  }
+}
+
 /** Error thrown for genuine DNS infrastructure failures (not "not found"). */
 export class DnsLookupError extends Error {
   constructor(
